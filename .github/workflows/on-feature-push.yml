@@ -43,7 +43,7 @@ jobs:
       REPO: ${{ github.repository }}
       HEAD_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Open (or reuse) the PR for this branch
         run: |
           if [ -z "$GH_TOKEN" ]; then
