@@ -22,7 +22,8 @@
     "docs:check": "node scripts/docs-readme.mjs --check",
     "verify": "npm run lint && npm run check:policy && npm run docs:check && npm run typecheck && npm test && npm run build",
     "mock": "json-server mock/db.json --port 4001 --routes mock/routes.json --middlewares mock/middleware.cjs",
-    "prepare": "node scripts/git-hooks.mjs install"
+    "prepare": "node scripts/git-hooks.mjs install",
+    "lock:sync": "node scripts/lock-sync.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",

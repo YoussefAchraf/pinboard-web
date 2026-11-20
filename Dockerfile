@@ -11,6 +11,8 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json* ./
+# npm runs the "prepare" script (git hook installer; a no-op without .git) - it must exist in the image.
+COPY scripts/git-hooks.mjs ./scripts/
 RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 COPY . .
 RUN npm run build

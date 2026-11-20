@@ -26,6 +26,9 @@ const TRAILER_RE = /^(co-authored-by|signed-off-by|generated-by|assisted-by|revi
 const SECRET_RE =
   /-----BEGIN [A-Z ]*PRIVATE KEY-----|AKIA[0-9A-Z]{16}|ghp_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{40,}|sk-[A-Za-z0-9_-]{24,}|xox[abprs]-[A-Za-z0-9-]{10,}/;
 const ZERO = /^0+$/;
+// npm bundled with the Node 22 images CI and Docker use. A lockfile accepted by the local npm can still be
+// rejected there (platform-only optional packages), so the sync check runs this exact version.
+const CI_NPM = 'npm@10.9.8';
 
 const git = (...args) => execFileSync('git', args, { encoding: 'utf8' }).trim();
 const fail = (lines) => {
@@ -141,8 +144,8 @@ function prePush() {
 
   // Always (not only when package files changed): drift can come from dev, a merge, or the template itself.
   {
-    const ci = spawnSync('npm', ['ci', '--dry-run', '--ignore-scripts', '--no-audit', '--no-fund'], { stdio: 'pipe', shell: process.platform === 'win32' });
-    if (ci.status !== 0) fail('package.json and package-lock.json are out of sync (npm ci would fail in CI) - run npm install and commit the lockfile');
+    const ci = spawnSync('npx', ['--yes', '-p', CI_NPM, 'npm', 'ci', '--dry-run', '--ignore-scripts', '--no-audit', '--no-fund'], { stdio: 'pipe', shell: process.platform === 'win32' });
+    if (ci.status !== 0) fail('package.json and package-lock.json are out of sync (npm ci would fail in CI) - run npm run lock:sync and commit the lockfile (never npm install after it)');
   }
 
   const cmd = process.env.GIT_HOOKS_VERIFY || 'npm run -s verify';
