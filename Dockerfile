@@ -8,7 +8,7 @@
 # (docker/nginx/default.conf.template is rendered by the nginx entrypoint on start).
 # VITE_* variables ARE baked at build time - they are public, never put secrets in them.
 
-FROM node:22-alpine AS build
+FROM node:26-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json* ./
 RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
