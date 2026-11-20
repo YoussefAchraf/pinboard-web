@@ -1,22 +1,19 @@
 /**
  * FILE:   src/shared/store/themeStore.ts
  * LAYER:  shared
- * STATUS: placeholder - implement in place; keep this header in sync with the real code.
+ * STATUS: implemented
  *
  * PURPOSE
  *   Global UI state for the color theme. UI concerns only - server data never goes in a
  *   Zustand store (that is TanStack Query's job).
  *
- * WHAT TO WRITE
- *   export type ThemePreference = 'light' | 'dark' | 'system';
- *   interface IThemeState { preference: ThemePreference; setPreference: (p: ThemePreference) => void }
- *   export const useThemeStore = create<IThemeState>()((set) => ({ preference: 'system', setPreference: (preference) => set({ preference }) }));
- *   - Persisting the preference is a per-device convenience, not auth data: if wanted, use zustand
- *     `persist` with localStorage ONLY for this store, and document that exception in AGENTS.md
- *     (the localStorage.setItem lint ban targets auth/session data; persist uses its own storage API).
+ * CONTENT
+ *   preference 'light' | 'dark' | 'system' (default 'system' = follow prefers-color-scheme).
+ *   - Not persisted (task 002): the choice lasts for the page session. Persisting it per device
+ *     (zustand `persist` + localStorage, this store only) is allowed later, documented in AGENTS.md.
  *
  * EXPORTS
- *   useThemeStore, ThemePreference
+ *   useThemeStore, ThemePreference, THEME_PREFERENCES
  *
  * USED BY
  *   shared/hooks/useTheme.ts, a theme toggle component.
@@ -24,4 +21,17 @@
  * MAY IMPORT
  *   zustand.
  */
-export {};
+import { create } from 'zustand';
+
+export const THEME_PREFERENCES = ['light', 'dark', 'system'] as const;
+export type ThemePreference = (typeof THEME_PREFERENCES)[number];
+
+interface IThemeState {
+  preference: ThemePreference;
+  setPreference: (preference: ThemePreference) => void;
+}
+
+export const useThemeStore = create<IThemeState>()((set) => ({
+  preference: 'system',
+  setPreference: (preference) => set({ preference }),
+}));
