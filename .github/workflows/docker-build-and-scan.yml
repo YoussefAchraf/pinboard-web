@@ -13,8 +13,8 @@ jobs:
     name: build-and-scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
+      - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
 
       # Tags: sha-<short> always; latest on the default branch; vX.Y.Z on git tags.
       - name: Image metadata
@@ -28,7 +28,7 @@ jobs:
             type=semver,pattern={{version}}
 
       - name: Build image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           target: runtime
@@ -48,7 +48,7 @@ jobs:
 
       - name: Login to GHCR
         if: ${{ inputs.push }}
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -57,7 +57,7 @@ jobs:
       # Re-uses the GHA layer cache from the build step above (no full rebuild).
       - name: Push image
         if: ${{ inputs.push }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           target: runtime
