@@ -1,0 +1,31 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    groups:
+      react:
+        patterns: ["react", "react-dom", "@types/react", "@types/react-dom", "react-router-dom"]
+      tanstack:
+        patterns: ["@tanstack/*"]
+      i18n:
+        patterns: ["i18next", "i18next-*", "react-i18next"]
+      lint:
+        patterns: ["eslint", "eslint-*", "@eslint/*", "typescript-eslint", "globals", "oxlint", "stylelint", "stylelint-*"]
+      test:
+        patterns: ["vitest", "@testing-library/*", "jsdom", "msw"]
+      build:
+        patterns: ["vite", "@vitejs/*", "postcss", "postcss-*", "typescript"]
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    groups:
+      actions:
+        patterns: ["*"]
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly

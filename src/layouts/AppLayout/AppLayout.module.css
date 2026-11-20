@@ -1,0 +1,16 @@
+/*
+ * AppLayout.module.css - presentation for AppLayout.tsx (placeholder).
+ *
+ * Classes to write (camelCase, consumed as styles.<name>):
+ *   .shell     min-block-size: 100dvh; grid with header + main; background var(--color-bg)
+ *   .skipLink  visually hidden until :focus-visible (then fixed top-left, var(--color-surface))
+ *   .header    sticky top, z-index var(--z-header), padding var(--space-3) var(--space-4),
+ *              border-block-end 1px solid var(--color-border), background var(--color-surface)
+ *   .brand     font-weight var(--font-weight-semibold); min-block-size var(--touch-target-min)
+ *   .main      inline-size min(100%, var(--layout-max-width)); margin-inline auto; padding var(--space-4)
+ *
+ * Mobile-first: base styles target phones; enhance with
+ *   @import '@/styles/breakpoints.css';   (first line)
+ *   @media (--bp-tablet) { .main { padding: var(--space-8); } }
+ * Tokens only: no hex colors, no font-family, no raw pixel breakpoints (stylelint enforces).
+ */

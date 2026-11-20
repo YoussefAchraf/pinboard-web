@@ -1,0 +1,33 @@
+{
+  "users": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "email": "admin@example.test",
+      "password": "mock-password",
+      "firstname": "Ada",
+      "lastname": "Admin",
+      "roleName": "admin",
+      "status": "active",
+      "createdAt": "2026-01-01T00:00:00Z"
+    },
+    {
+      "id": "00000000-0000-4000-8000-000000000002",
+      "email": "member@example.test",
+      "password": "mock-password",
+      "firstname": "Max",
+      "lastname": "Member",
+      "roleName": "member",
+      "status": "active",
+      "createdAt": "2026-01-02T00:00:00Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": "10000000-0000-4000-8000-000000000001",
+      "name": "Example project",
+      "description": "Neutral example resource. Replace it with the resources of the current project's contract.",
+      "status": "active",
+      "createdAt": "2026-01-03T09:00:00Z"
+    }
+  ]
+}

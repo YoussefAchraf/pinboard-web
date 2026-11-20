@@ -1,0 +1,8 @@
+{
+  "skipToContentKey": "layout.skipToContent",
+  "brandKey": "app.name",
+  "navLabelKey": "layout.mainNavigation",
+  "nav": [
+    { "path": "home", "labelKey": "nav.home" }
+  ]
+}

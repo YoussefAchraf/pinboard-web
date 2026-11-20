@@ -1,0 +1,10 @@
+/*
+ * LoginPage.module.css - presentation for LoginPage.tsx (placeholder).
+ *
+ * Classes to write:
+ *   .page      display grid; gap var(--space-6)
+ *   .title     font-size var(--font-size-600)
+ *   .subtitle  color var(--color-text-muted)
+ *
+ * The card/centering comes from AuthLayout - the page styles only its own content.
+ */

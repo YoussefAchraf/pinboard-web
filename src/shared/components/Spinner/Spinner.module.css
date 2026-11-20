@@ -1,0 +1,12 @@
+/*
+ * Spinner.module.css - presentation for Spinner.tsx (placeholder).
+ *
+ * Classes to write:
+ *   .spinner         inline-block circle: border 2px solid var(--color-border);
+ *                    border-block-start-color var(--color-accent); border-radius var(--radius-full);
+ *                    animation: spin 700ms linear infinite
+ *   .sm / .md / .lg  sizes 1rem / 1.5rem / 2.5rem
+ *   .visuallyHidden  standard visually-hidden pattern (clip, 1px, overflow hidden)
+ *   @keyframes spin  to { transform: rotate(1turn); }
+ *   @media (prefers-reduced-motion: reduce) { .spinner { animation-duration: 2s; } }  (slow, not frozen)
+ */

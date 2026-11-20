@@ -1,0 +1,9 @@
+/*
+ * HomePage.module.css - presentation for HomePage.tsx (placeholder).
+ *
+ * Classes to write:
+ *   .page   display grid; gap var(--space-6)
+ *   .title  font-size var(--font-size-700)
+ *   .empty  padding var(--space-8); border 1px dashed var(--color-border); border-radius var(--radius-lg);
+ *           color var(--color-text-muted); text-align center
+ */

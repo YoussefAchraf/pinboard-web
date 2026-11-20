@@ -1,0 +1,43 @@
+{
+  "app": {
+    "name": "App"
+  },
+  "loading": "Chargement…",
+  "layout": {
+    "skipToContent": "Aller au contenu principal",
+    "mainNavigation": "Navigation principale"
+  },
+  "nav": {
+    "home": "Accueil"
+  },
+  "actions": {
+    "retry": "Réessayer",
+    "reload": "Recharger",
+    "backHome": "Retour à l'accueil"
+  },
+  "routeError": {
+    "title": "Une erreur est survenue",
+    "notFound": "Cette page n'existe pas.",
+    "newVersion": "Une nouvelle version est disponible. Rechargez pour continuer."
+  },
+  "errors": {
+    "VALIDATION_FAILED": "Certains champs sont invalides. Vérifiez le formulaire et réessayez.",
+    "UNAUTHENTICATED": "Votre session a expiré. Veuillez vous reconnecter.",
+    "INVALID_CREDENTIALS": "E-mail ou mot de passe incorrect.",
+    "FORBIDDEN": "Vous n'avez pas accès à cette action.",
+    "CSRF_INVALID": "Votre session n'a pas pu être vérifiée. Rechargez la page et réessayez.",
+    "NOT_FOUND": "Nous n'avons pas trouvé ce que vous cherchez.",
+    "CONFLICT": "Cela entre en conflit avec des données existantes.",
+    "RATE_LIMITED": "Trop de tentatives. Patientez un instant puis réessayez.",
+    "INTERNAL_ERROR": "Une erreur est survenue de notre côté. Réessayez plus tard.",
+    "NETWORK_ERROR": "Vous semblez hors ligne. Vérifiez votre connexion.",
+    "TIMEOUT": "Le serveur a mis trop de temps à répondre. Réessayez."
+  },
+  "validation": {
+    "required": "Ce champ est obligatoire.",
+    "email": "Saisissez une adresse e-mail valide.",
+    "too_small": "Cette valeur est trop courte.",
+    "too_big": "Cette valeur est trop longue.",
+    "invalid_type": "Cette valeur n'est pas valide."
+  }
+}

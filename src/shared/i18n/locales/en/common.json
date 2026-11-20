@@ -1,0 +1,43 @@
+{
+  "app": {
+    "name": "App"
+  },
+  "loading": "Loading…",
+  "layout": {
+    "skipToContent": "Skip to main content",
+    "mainNavigation": "Main navigation"
+  },
+  "nav": {
+    "home": "Home"
+  },
+  "actions": {
+    "retry": "Try again",
+    "reload": "Reload",
+    "backHome": "Back to home"
+  },
+  "routeError": {
+    "title": "Something went wrong",
+    "notFound": "This page does not exist.",
+    "newVersion": "A new version is available. Reload to continue."
+  },
+  "errors": {
+    "VALIDATION_FAILED": "Some fields are invalid. Check the form and try again.",
+    "UNAUTHENTICATED": "Your session has ended. Please sign in again.",
+    "INVALID_CREDENTIALS": "Email or password is incorrect.",
+    "FORBIDDEN": "You do not have access to this action.",
+    "CSRF_INVALID": "Your session could not be verified. Reload the page and try again.",
+    "NOT_FOUND": "We could not find what you were looking for.",
+    "CONFLICT": "This conflicts with existing data.",
+    "RATE_LIMITED": "Too many attempts. Wait a moment and try again.",
+    "INTERNAL_ERROR": "Something went wrong on our side. Try again later.",
+    "NETWORK_ERROR": "You appear to be offline. Check your connection.",
+    "TIMEOUT": "The server took too long to respond. Try again."
+  },
+  "validation": {
+    "required": "This field is required.",
+    "email": "Enter a valid email address.",
+    "too_small": "This value is too short.",
+    "too_big": "This value is too long.",
+    "invalid_type": "This value is not valid."
+  }
+}

@@ -1,0 +1,12 @@
+/*
+ * AuthLayout.module.css - presentation for AuthLayout.tsx (placeholder).
+ *
+ * Classes to write:
+ *   .page   min-block-size: 100dvh; display grid; place-items: center; padding var(--space-4);
+ *           background var(--color-bg)
+ *   .card   inline-size: 100%; padding var(--space-6); background var(--color-surface);
+ *           from --bp-tablet: max-inline-size 28rem; border-radius var(--radius-lg); box-shadow var(--shadow-md)
+ *   .brand  font-size var(--font-size-400); font-weight var(--font-weight-semibold); margin-block-end var(--space-6)
+ *
+ * Tokens only (stylelint enforces). Breakpoints via @import '@/styles/breakpoints.css'.
+ */

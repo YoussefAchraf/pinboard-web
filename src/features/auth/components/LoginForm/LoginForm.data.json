@@ -1,0 +1,6 @@
+{
+  "emailLabelKey": "login.emailLabel",
+  "passwordLabelKey": "login.passwordLabel",
+  "submitKey": "login.submit",
+  "submittingKey": "login.submitting"
+}
