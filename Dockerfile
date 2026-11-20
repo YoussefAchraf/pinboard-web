@@ -11,11 +11,18 @@
 FROM node:22-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json* ./
+# npm runs the "prepare" script (git hook installer; a no-op without .git) - it must exist in the image.
+COPY scripts/git-hooks.mjs ./scripts/
 RUN if [ -f package-lock.json ]; then npm ci; else npm install; fi
 COPY . .
 RUN npm run build
 
-FROM nginxinc/nginx-unprivileged:1.27-alpine AS runtime
+# Mainline nginx (security fixes land here first; 1.30 stable lagged a CRITICAL fix on 2026-11-20). OS packages upgraded at build time so fixable CVEs do not wait for a new base tag
+# (the Trivy gate fails on fixable CRITICAL). The image runs as the unprivileged nginx user (uid 101).
+FROM nginxinc/nginx-unprivileged:1.31-alpine AS runtime
+USER root
+RUN apk upgrade --no-cache
+USER 101
 ENV BACKEND_UPSTREAM=http://backend:4000
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY docker/nginx/default.conf.template /etc/nginx/templates/default.conf.template

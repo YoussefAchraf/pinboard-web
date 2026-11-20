@@ -166,6 +166,7 @@ cp .env.example .env
 npm install
 npm run dev          # http://localhost:3000 - /api -> et-be :4000 (or mock :4001 with VITE_USE_MOCK=true)
 npm run mock         # json-server on :4001
+npm run lock:sync    # after ANY dependency change (Linux lockfile, needs Docker) - PROTOCOL 5.2
 npm run verify       # LOCAL PIPELINE: lint (eslint+oxlint+stylelint) + policy + typecheck + tests + build - mandatory before every push
 npm run check:policy # just the policy check (no PWA, no color/font literals in TS/TSX) - same script CI runs
 npm run preview      # serve the production build locally
