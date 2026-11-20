@@ -139,9 +139,10 @@ function prePush() {
     fail(`branch is behind origin/dev - run "git merge origin/dev" (or rebase if never pushed), resolve conflicts (PROTOCOL 9.5), re-run npm run verify, then push`);
   }
 
-  if ([...changedFiles].some((f) => f === 'package.json' || f === 'package-lock.json')) {
+  // Always (not only when package files changed): drift can come from dev, a merge, or the template itself.
+  {
     const ci = spawnSync('npm', ['ci', '--dry-run', '--ignore-scripts', '--no-audit', '--no-fund'], { stdio: 'pipe', shell: process.platform === 'win32' });
-    if (ci.status !== 0) fail('package.json and package-lock.json are out of sync - run npm install and commit the lockfile');
+    if (ci.status !== 0) fail('package.json and package-lock.json are out of sync (npm ci would fail in CI) - run npm install and commit the lockfile');
   }
 
   const cmd = process.env.GIT_HOOKS_VERIFY || 'npm run -s verify';

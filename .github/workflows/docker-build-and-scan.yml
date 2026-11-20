@@ -34,14 +34,14 @@ jobs:
           target: runtime
           push: false
           load: true
-          tags: pinboard-web:ci
+          tags: rt-fe:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Scan image (fails on fixable CRITICAL)
-        uses: aquasecurity/trivy-action@0.36.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: pinboard-web:ci
+          image-ref: rt-fe:ci
           severity: CRITICAL
           ignore-unfixed: true
           exit-code: '1'
