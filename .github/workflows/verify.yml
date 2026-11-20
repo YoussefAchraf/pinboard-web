@@ -8,7 +8,7 @@ jobs:
     name: lint (eslint + oxlint)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-project
       - run: npm run lint
 
@@ -16,11 +16,11 @@ jobs:
     name: boundaries report
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-project
       - name: Architecture boundary violations
         run: npx eslint . --rule '{"boundaries/dependencies":"error"}' --format json --output-file boundaries-report.json || true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: boundaries-report
           path: boundaries-report.json
@@ -32,8 +32,8 @@ jobs:
     name: template policies (no PWA, tokens only)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
       # Same script agents run locally (`npm run check:policy`) - one source of truth, no install needed.
@@ -44,8 +44,8 @@ jobs:
     name: docs (generated README sections are current)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
       # Same script as `npm run docs:check` - fails when docs/ changed but README.md was not regenerated.
@@ -55,7 +55,7 @@ jobs:
     name: typecheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-project
       - run: npm run typecheck
 
@@ -63,7 +63,7 @@ jobs:
     name: test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-project
       - run: npm test
 
@@ -71,7 +71,7 @@ jobs:
     name: sca
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup-project
       - name: npm audit (report only)
         run: npm audit --omit=dev || true
@@ -80,9 +80,9 @@ jobs:
     name: secret-scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: gitleaks/gitleaks-action@v2
+      - uses: gitleaks/gitleaks-action@v3
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
