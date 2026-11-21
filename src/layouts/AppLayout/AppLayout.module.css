@@ -1,16 +1,109 @@
 /*
- * AppLayout.module.css - presentation for AppLayout.tsx (placeholder).
- *
- * Classes to write (camelCase, consumed as styles.<name>):
- *   .shell     min-block-size: 100dvh; grid with header + main; background var(--color-bg)
- *   .skipLink  visually hidden until :focus-visible (then fixed top-left, var(--color-surface))
- *   .header    sticky top, z-index var(--z-header), padding var(--space-3) var(--space-4),
- *              border-block-end 1px solid var(--color-border), background var(--color-surface)
- *   .brand     font-weight var(--font-weight-semibold); min-block-size var(--touch-target-min)
- *   .main      inline-size min(100%, var(--layout-max-width)); margin-inline auto; padding var(--space-4)
- *
- * Mobile-first: base styles target phones; enhance with
- *   @import '@/styles/breakpoints.css';   (first line)
- *   @media (--bp-tablet) { .main { padding: var(--space-8); } }
- * Tokens only: no hex colors, no font-family, no raw pixel breakpoints (stylelint enforces).
+ * AppLayout.module.css - presentation for AppLayout.tsx.
+ * Mobile-first; tokens only; breakpoints via @custom-media.
  */
+@import '@/styles/breakpoints.css';
+
+.shell {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-block-size: 100dvh;
+  background: var(--color-bg);
+}
+
+.skipLink {
+  position: absolute;
+  inset-block-start: var(--space-2);
+  inset-inline-start: var(--space-2);
+  z-index: var(--z-toast);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transform: translateY(-200%);
+}
+
+.skipLink:focus-visible {
+  transform: none;
+}
+
+.header {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-header);
+  border-block-end: 1px solid var(--color-border);
+  background: var(--color-surface);
+}
+
+.headerInner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+  inline-size: min(100%, var(--layout-max-width));
+  margin-inline: auto;
+  padding: var(--space-2) var(--space-4);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--touch-target-min);
+  font-size: var(--font-size-400);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.nav {
+  flex: 1;
+}
+
+.navList {
+  display: flex;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.navLink {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: var(--touch-target-min);
+  padding-inline: var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+
+.navLink:hover {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.navLink[aria-current='page'] {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+}
+
+.userSlot {
+  margin-inline-start: auto;
+}
+
+.main {
+  inline-size: min(100%, var(--layout-max-width));
+  margin-inline: auto;
+  padding: var(--space-6) var(--space-4);
+}
+
+.main:focus {
+  outline: none;
+}
+
+@media (--bp-tablet) {
+  .main {
+    padding: var(--space-8);
+  }
+}

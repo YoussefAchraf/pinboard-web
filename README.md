@@ -50,9 +50,9 @@ contract-following mock API while backend endpoints are still in progress.
 
 | Feature | Status | Since | Summary |
 |---|---|---|---|
+| [Authentication](docs/features/auth.md) | in-progress | - | Sign in with email and password, session bootstrap on load, guarded routes, user menu with sign out, automatic token refresh and session-expiry handling. |
+| [Home](docs/features/home.md) | in-progress | - | Signed-in landing page that greets the member by first name until the bookmarks list replaces it. |
 | [Web platform foundation](docs/features/platform.md) | in-progress | - | Shared layer every feature uses - HTTP client with cookie session, CSRF and silent refresh, typed API errors, i18n (en, fr), theme and the MSW test harness. |
-| [Authentication](docs/features/auth.md) | planned | - | Sign in and sign out with cookie sessions, session bootstrap on load, automatic token refresh and guarded routes. |
-| [Home](docs/features/home.md) | planned | - | Signed-in landing page that completes the login -> home -> logout flow on the empty template. |
 
 <!-- AUTO-GENERATED:FEATURES:END -->
 
@@ -65,8 +65,8 @@ Feature pages: [docs/features/](docs/features/). Release history: [CHANGELOG.md]
 
 | Route | Access | Feature | Status |
 |---|---|---|---|
-| `/` | protected | [Home](docs/features/home.md) | planned |
-| `/login` | guest | [Authentication](docs/features/auth.md) | planned |
+| `/` | protected | [Home](docs/features/home.md) | in-progress |
+| `/login` | guest | [Authentication](docs/features/auth.md) | in-progress |
 
 <!-- AUTO-GENERATED:ROUTES:END -->
 

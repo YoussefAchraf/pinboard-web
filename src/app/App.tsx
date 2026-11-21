@@ -1,30 +1,18 @@
 /**
  * FILE:   src/app/App.tsx
  * LAYER:  app (may import app/, routes/, shared/)
- * STATUS: placeholder - implement in place; keep this header in sync with the real code.
+ * STATUS: implemented
  *
  * PURPOSE
  *   The application shell: providers + session bootstrap gate. Zero UI chrome (that is layouts/).
  *
- * WHAT TO WRITE
- *   export function App(): ReactElement {
- *     useTheme();                                        // shared/hooks/useTheme - sets <html data-theme>
- *     useEffect(() => configureApiClient({               // shared/lib/apiClient - DI instead of shared->features import
- *       onSessionExpired: () => { queryClient.clear(); router.navigate(paths.login); },
- *     }), []);
- *     return (
- *       <ErrorBoundary>
- *         <QueryClientProvider client={queryClient}>
- *           <SessionGate />                               // renders <Spinner/> until useSessionBootstrap resolves,
- *                                                         // then <RouterProvider router={router} />
- *           {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
- *         </QueryClientProvider>
- *       </ErrorBoundary>
- *     );
- *   }
- *   - SessionGate may be a small local component in this file. useSessionBootstrap lives in
- *     features/auth; App reaches it through routes/ (e.g. router.tsx re-exports a `SessionGate`),
- *     because app/ must not import features/ directly (boundaries).
+ * CONTENT
+ *   useTheme() sets <html data-theme>. ErrorBoundary > QueryClientProvider > SessionGate
+ *   (routes/SessionGate.tsx: Spinner until the whoami bootstrap resolves, then RouterProvider).
+ *   React Query devtools in development only.
+ *   - Session expiry (apiClient onSessionExpired) is registered by SessionGate through the auth
+ *     feature (features/auth/hooks/useSessionExpiry): app/ may not import apiClient (lint - only a
+ *     feature api/ folder may) nor features/ (boundaries).
  *   - Named export only (no default export - lint).
  *
  * EXPORTS
@@ -34,7 +22,25 @@
  *   src/main.tsx   `createRoot(root).render(<StrictMode><App /></StrictMode>)`
  *
  * MAY IMPORT
- *   ./ErrorBoundary, @/routes/router (router + SessionGate), @/routes/paths, @/shared/lib/{queryClient,apiClient},
- *   @/shared/hooks/useTheme, @tanstack/react-query, @tanstack/react-query-devtools, react-router-dom.
+ *   ./ErrorBoundary, @/routes/SessionGate, @/shared/lib/queryClient, @/shared/hooks/useTheme,
+ *   @tanstack/react-query, @tanstack/react-query-devtools.
  */
-export {};
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import type { ReactElement } from 'react';
+import { ErrorBoundary } from './ErrorBoundary';
+import { SessionGate } from '@/routes/SessionGate';
+import { useTheme } from '@/shared/hooks/useTheme';
+import { queryClient } from '@/shared/lib/queryClient';
+
+export function App(): ReactElement {
+  useTheme();
+  return (
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <SessionGate />
+        {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
+      </QueryClientProvider>
+    </ErrorBoundary>
+  );
+}

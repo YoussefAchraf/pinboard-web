@@ -51,3 +51,16 @@ live in `src/shared/components/` and are created on the second need, not specula
 | Component | Purpose | Status |
 |---|---|---|
 | `Spinner` | Loading indicator (route chunks, session bootstrap, buttons); `role="status"`, sizes `sm`/`md`/`lg`, slower rotation under reduced motion | implemented (002) |
+
+## Patterns (task 004)
+
+| Pattern | Where | Rules |
+|---|---|---|
+| Form field | `features/auth/components/LoginForm` | visible `<label for>`; error text under the field (`role="alert"`, linked by `aria-describedby`, `aria-invalid` on the input); validation on blur; first invalid field focused on submit |
+| Form-level error | `LoginForm` | `--color-danger` text on `--color-danger-surface`, `role="alert"`, above the fields |
+| Primary button | `LoginForm` submit, `RouteError` | `--color-accent` / `--color-accent-contrast`, 44 px min height; `disabled` + `aria-busy` + "...ing" label while submitting |
+| Disclosure menu | `features/auth/components/UserMenu` | trigger with `aria-expanded`/`aria-controls`, accessible name starts with the visible text; Escape closes and returns focus; focus leaving or a pointer press outside closes |
+| Centered card shell | `AuthLayout`, `RouteError`, `ErrorBoundary` fallback | full-bleed card on phones, max inline size + `--shadow-md` from `--bp-tablet` |
+| Full-page spinner | `routes/RouteShell.tsx` `PageSpinner` | session bootstrap and lazy route loading |
+
+Promote any of these to `shared/components/` on the second feature that needs it.

@@ -1,0 +1,6 @@
+{
+  "triggerLabelKey": "userMenu.trigger",
+  "signedInAsKey": "userMenu.signedInAs",
+  "signOutKey": "logout.action",
+  "signingOutKey": "logout.pending"
+}

@@ -12,3 +12,4 @@ versions follow [Semantic Versioning](https://semver.org/).
 ### Added
 
 - Web platform foundation: apiClient (cookies, CSRF echo, single-flight refresh), ApiError and error codes, domain types, query client, i18n, theme, Spinner, MSW test harness (002)
+- Auth UI and app shell: login page, session bootstrap, guards (guest, protected, role), app and auth layouts, user menu with sign out, session-expiry handling, route error and not-found views, temporary home greeting (004)

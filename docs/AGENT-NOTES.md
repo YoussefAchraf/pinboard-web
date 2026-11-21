@@ -3,78 +3,90 @@
 Rewritten at the end of every frontend session (rules: `../../agents/PROTOCOL.md` section 6).
 This is the frontend agent's memory across sessions and AI tools. Never store secrets or personal data.
 
-## 1. Snapshot (2026-11-20)
+## 1. Snapshot (2026-11-21)
 
-Task 002 (web platform foundation) is implemented on branch `feature/002-web-platform-foundation`; PR into
-`dev` opened, waiting for manager review (Result says review). Shared layer works: apiClient (CSRF,
-single-flight refresh, ApiError), error codes, domain types, queryClient, env, zodConfig, safeOpen, i18n,
-theme, Spinner, MSW harness. Next: task 004 (auth UI + app shell) once the manager marks it ready.
+Task 004 (auth UI + app shell) is implemented on branch `feature/004-auth-ui-app-shell`; PR into `dev` opened,
+waiting for manager review (brief Status: review). Login, session bootstrap, guards, layouts, user menu with sign
+out, session expiry, RouteError/404 and a temporary home greeting work against MSW and the json-server mock.
+Auth still runs on the mock; switching to et-be + nginx e2e is a later integration task (after 003 is done).
+Next: round 2 (bookmarks) or review feedback.
 
 ## 2. Active work
 
-- 002 - review; PR open (never merge it - the manager merges). Next step: address review feedback, if any.
-- 004 - queued (auth UI + app shell), builds on 002.
+- 004 - review; PR open (never merge it - the manager merges). Next step: address review feedback, if any.
 
 ## 3. Project knowledge
 
 - PinBoard: single tenant, tier S, locales en (default) + fr, WCAG 2.2 AA, no sign-up (operator seed script).
-- apiClient: an anonymous visitor's whoami 401 also triggers one refresh attempt; when it fails,
-  `onSessionExpired` is called - the App.tsx callback (task 004) must be harmless when nobody was signed in.
-- Error UX: the UI renders `t('errors.<CODE>')` (common); zod messages are `validation.*` keys (zodConfig).
+- Session flow: `routes/SessionGate.tsx` -> `useSessionBootstrap` (whoami runs only while `authStore.status` is
+  `unknown`) -> RouterProvider. Logout / expiry call `queryClient.clear()`; the disabled session observer then
+  re-creates an EMPTY `['auth','session']` query (no fetch) - assert "no query has data", not "cache empty".
+- Session expiry is wired by the auth feature (`authApi.onSessionExpired` + `hooks/useSessionExpiry`), because
+  lint forbids `app/` and `routes/` from importing apiClient. It ignores the signal unless status is `authenticated`
+  (an anonymous bootstrap 401 -> failed refresh also fires it).
+- Post-login redirect is done only by `GuestRoute` (`location.state.from`, internal paths only); useLogin does not navigate.
+- Protected pages get the user from outlet context (`ProtectedRoute` -> AppLayout forwards -> e.g. home
+  `useSessionUser`); features never import each other.
+- Routes: tree + `getBrowserRouter()` in `routes/router.tsx`; components `PageSpinner`/`DocumentTitle` in
+  `routes/RouteShell.tsx`; `SessionGate.tsx`. Page title = route `handle.titleKey` ('ns:key') -> "<page> - PinBoard".
+  No `*` route: unmatched paths render the root errorElement (RouteError, 404).
+- Tests: colocated tests may import `src/test/**` (ADR 0006). App-level tests use `renderApp({ route })`
+  (real SessionGate + appRoutes in a memory router, auth store reset). Helpers: `signedInWhoami()`, `loginFails()`.
+  A test under `routes/` may NOT import apiClient (lint) - go through a feature api (`authApi.whoami()`).
+- Error UX: `common:errors.<CODE>`; login FORBIDDEN -> `auth:login.accountDisabled`; zod messages are `validation.*`.
+- Mock: sign in `member@example.test` / `mock-password`; its "session" is one server-side flag shared by all clients.
 - Bookmark URLs must pass `isSafeUrl` (absolute http/https only) before a link is rendered.
-- Lint boundaries classify colocated tests by their folder: a `shared/` or `features/` test cannot import
-  `src/test/*` (renderWithProviders, server). Until request `fe-002-decision-colocated-tests-harness` is
-  resolved, harness-based tests go in `src/test/`.
-- MSW lifecycle: call `setupMswLifecycle()` (src/test/server.ts) at the top level of a network test file.
-  Handlers match `apiUrl('/auth/login')` = `*/api/v1/auth/login`; `TEST_USER`, `TEST_CREDENTIALS`, `errorBody`.
-- `main.tsx` still renders `null` and does not import env/zodConfig yet (task 004 finishes it).
+- `index.html` still has `<title>App</title>` (pre-JS title; not in the 004 file scope).
 
 ## 4. Verified facts
 
-Installed versions (2026-11-20): react 19.3.1, react-router-dom 7.18.6, @tanstack/react-query 5.108.1,
+Installed versions (2026-11-21): react 19.3.1, react-router-dom 7.18.6, @tanstack/react-query 5.108.1,
 zod 4.6.7, vite 8.3.8, vitest 4.1.12, msw 2.15.0, axios 1.21.1, i18next 26.7.2, react-i18next 17.1.13,
-i18next-browser-languagedetector 8.3.1, zustand 5.1.0, stylelint 18.0.0, postcss-custom-media 12.0.4.
+zustand 5.1.0, react-hook-form 7.92.0, @hookform/resolvers 5.9.2, lucide-react 1.77.0, oxlint 1.94.0,
+eslint-plugin-boundaries 7.4.4.
 
-- eslint-plugin-boundaries 7.4.4 - element patterns match FOLDERS; single files via `boundaries/files`
-  categories (`entry`, `route-public`); `capture: ['featureName']` + `captured` enforces same-feature
-  imports - verified: violation test. A colocated `*.test.ts` in shared/ is element `shared` - verified: lint.
-- postcss-custom-media 12 - `@import '@/styles/breakpoints.css'` + `@media (--bp-tablet)` compiles to
-  `@media (width>=768px)` - verified: probe build.
-- react-router 7.18.6 - route `lazy` and `HydrateFallback` exist - verified: dist d.ts.
-- zod 4.6.7 - `z.config({ customError })`; the map receives raw issues with `input`; an email failure is code
-  `invalid_format` + `format: 'email'`; explicit schema messages win - verified: core.d.ts + zodConfig.test.ts.
-- axios 1.21.1 - xhr adapter: timeout code is ECONNABORTED unless `transitional.clarifyTimeoutError` (then
-  ETIMEDOUT); ECONNABORTED also means "aborted"; fetch adapter always ETIMEDOUT - verified:
-  lib/adapters/xhr.js, lib/helpers/composeSignals.js, apiClient.test.ts.
-- msw 2.15.0 - the XHR interceptor does not emulate the XHR `timeout` for a pending mocked response (test hangs);
-  test timeouts with `adapter: 'fetch'` + an absolute baseURL (Node fetch ignores the jsdom location) - verified: test.
-- i18next 26.7.2 - init options `initAsync`, `returnNull` exist - verified: typescript/options.d.ts.
-- i18next-browser-languagedetector 8.3.1 - `detection.caches: []` disables storage writes - verified: index.d.ts.
-- stylelint-config-standard 41 - requires short hex (`#fff`) - fixed in tokens.css.
-- Node: stylelint 18 / jsdom 30 dependencies require node >= 22.22.2 (engines field set accordingly).
+- eslint-plugin-boundaries 7.4.4 - element patterns match FOLDERS; files via `boundaries/files` categories.
+  ADR 0006 rule: `{ pattern: 'src/**/*.test.{ts,tsx}', category: 'test-file' }` + policy
+  `{ from: { file: { categories: 'test-file' } }, allow: { to: { element: { types: ['test'] } } } }` - verified with
+  probe files: test files in shared/ and features/ may import `@/test/*`; production files there still fail; a
+  feature test file still cannot import `routes` (the rule is narrow).
+- react-router 7.18.6 - route `lazy` returning `{ Component }`, `HydrateFallback`, `handle` + `useMatches()`;
+  unmatched path -> root errorElement with an `isRouteErrorResponse` 404; `createBrowserRouter`/`createMemoryRouter`
+  return the same Router type; `router.navigate()` returns a Promise - verified: d.ts + router.test.tsx.
+- react-hook-form 7.92.0 - `setError(name, error, { shouldFocus })`, `resetField`, `setFocus`; submit focuses the
+  first invalid field by default - verified: form.d.ts + LoginForm.test.tsx.
+- zod 4.6.7 - top-level `z.email()` (string `.email()` is deprecated); `.pipe()` stops on input issues, so an empty
+  email reports only `validation.required` - verified: schemas.d.ts + loginSchema.test.ts.
+- oxlint 1.94 - `react(refs)` flags every property read of an object that also carries a value passed to `ref=`
+  (destructure the hook result); `react(only-export-components)` warns on mixed component/non-component exports -
+  verified: lint output.
+- Accessible name of `<button><span>Max</span><span>Account menu</span></button>` is "MaxAccount menu" (no space) -
+  use an aria-label starting with the visible text - verified: Testing Library.
+- msw / axios / i18next facts from task 002 still hold (see the git history of this file).
+- Git Bash rewrites `VAR=/api` env values into Windows paths: prefix `MSYS_NO_PATHCONV=1` - verified (vite env dump).
+- Headless Chrome `--window-size` has a minimum width above 320 px; dev-mode pages need a long `--virtual-time-budget`.
 - NOT yet verified: nginx-unprivileged template rendering (needs a Docker build/run task).
 
 ## 5. Decisions & contract versions relied on
 
-- ADR 0001 (no PWA), ADR 0002 (cookie auth + CSRF), ADR 0003 (envelope, pagination, /v1), ADR 0005 (tier S).
-- Conventions sections 2, 3, 5, 6 implemented in `src/shared/`.
-- React Router native `lazy` + `routeModules.ts` registry; per-feature `queryOptions`; apiClient
-  session expiry via `configureApiClient` callback; layouts take feature UI through slots.
-- Contract versions: `auth.yaml 1.1.0` (refreshSession, User, ErrorResponse, ErrorCode - task 002).
+- ADR 0001 (no PWA), 0002 (cookie auth + CSRF), 0003 (envelope, pagination, /v1), 0005 (tier S), 0006 (lint
+  boundary exceptions - implemented in 004).
+- Conventions sections 2, 3, 5, 6, 7 implemented.
+- Contract versions: `auth.yaml 1.1.0` (login, logout, whoami, refreshSession, User, ErrorResponse).
 
 ## 6. Pitfalls learned
 
 - CSS variables do not work inside `@media` - breakpoints are `@custom-media`.
-- React 19 types have no global `JSX` namespace - type components as `ReactElement` (import type from 'react').
+- React 19 types have no global `JSX` namespace - type components as `ReactElement`.
 - json-server 0.17 CLI does not parse bodies before custom middlewares (mock reads the body itself).
 - Flat ESLint config: later blocks REPLACE same-name rules - always declare complete lists.
-- Without `.gitattributes`, Windows git rewrites every line -> whole-file diffs. Keep the file.
-- Two agents editing `routes/paths.ts` conflict; resolve by keeping both entries (`../../agents/PROTOCOL.md` 9.5).
 - Git hooks block bad commits/pushes (PROTOCOL 5.2) - fix the cause, never `--no-verify`.
-- Shell heredocs with backticks/quotes break easily in the Windows Git Bash tool - write files with the editor tool.
-- Non-ASCII in tests (the ellipsis of "Loading...") breaks the ASCII rule - assert with a regex instead.
-- A brief's allowed files may exclude `src/test/setup.ts` or `eslint.config.mjs` - check before planning edits.
+- The file-writing tool refuses to overwrite a file not read in the session - read (or delete) placeholders first.
+- stylelint `no-descending-specificity`: put `:disabled` rules before `:hover:not(:disabled)`.
+- Test helper params defaulting to `as const` values get literal types - annotate them `string`.
+- Re-run `tsc -b` after adding tests (typecheck covers test files).
+- A brief's allowed files may exclude AGENTS.md / index.html - report instead of editing.
 
 ## 7. Waiting on
 
-- `../../contracts/requests/fe-002-decision-colocated-tests-harness.md` - open (non-blocking).
+- `../../contracts/requests/fe-002-decision-colocated-tests-harness.md` - scheduled, delivered in 004 (manager resolves).
