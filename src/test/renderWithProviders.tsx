@@ -9,6 +9,11 @@
  *
  * CONTENT
  *   renderWithProviders(ui, { route?, path? }) -> { queryClient, user, ...render result }
+ *     One memory route renders `ui` (default path '*').
+ *   renderApp({ route? }) -> { queryClient, router, user, ...render result }
+ *     The REAL app below the providers: SessionGate (whoami bootstrap + session expiry) with a
+ *     memory router built from routes/router.tsx appRoutes (guards, layouts, lazy pages, RouteError).
+ *     Resets the auth store to its initial 'unknown' state first.
  *   - queries/mutations never retry in tests (deterministic failures).
  *   - Query the DOM by role/label first (getByRole('button', { name: /sign in/i })), never by class.
  */
@@ -18,6 +23,10 @@ import type { RenderResult } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import type { ReactElement } from 'react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { INITIAL_AUTH_STATE, useAuthStore } from '@/features/auth/authStore';
+import { appRoutes } from '@/routes/router';
+import type { AppRouter } from '@/routes/router';
+import { SessionGate } from '@/routes/SessionGate';
 import { i18n } from '@/shared/i18n';
 
 export interface IRenderOptions {
@@ -30,11 +39,19 @@ export interface IRenderWithProvidersResult extends RenderResult {
   user: ReturnType<typeof userEvent.setup>;
 }
 
-export function renderWithProviders(ui: ReactElement, options?: IRenderOptions): IRenderWithProvidersResult {
+export interface IRenderAppResult extends IRenderWithProvidersResult {
+  router: AppRouter;
+}
+
+function createTestQueryClient(): QueryClient {
   if (i18n.language !== 'en') void i18n.changeLanguage('en');
-  const queryClient = new QueryClient({
+  return new QueryClient({
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
+}
+
+export function renderWithProviders(ui: ReactElement, options?: IRenderOptions): IRenderWithProvidersResult {
+  const queryClient = createTestQueryClient();
   const router = createMemoryRouter([{ path: options?.path ?? '*', element: ui }], {
     initialEntries: [options?.route ?? '/'],
   });
@@ -44,6 +61,22 @@ export function renderWithProviders(ui: ReactElement, options?: IRenderOptions):
     ...render(
       <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
+      </QueryClientProvider>,
+    ),
+  };
+}
+
+export function renderApp(options?: Pick<IRenderOptions, 'route'>): IRenderAppResult {
+  useAuthStore.setState(INITIAL_AUTH_STATE);
+  const queryClient = createTestQueryClient();
+  const router = createMemoryRouter(appRoutes, { initialEntries: [options?.route ?? '/'] });
+  return {
+    queryClient,
+    router,
+    user: userEvent.setup(),
+    ...render(
+      <QueryClientProvider client={queryClient}>
+        <SessionGate router={router} />
       </QueryClientProvider>,
     ),
   };

@@ -1,4 +1,8 @@
 {
   "title": "Accueil",
-  "emptyState": "Rien pour le moment."
+  "greeting": "Bonjour, {{name}}",
+  "comingSoon": {
+    "title": "Vos favoris arrivent bientôt",
+    "text": "La liste des favoris est en préparation. Vous pourrez enregistrer, retrouver et ouvrir vos liens depuis cette page."
+  }
 }

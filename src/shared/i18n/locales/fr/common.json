@@ -1,6 +1,7 @@
 {
   "app": {
-    "name": "PinBoard"
+    "name": "PinBoard",
+    "documentTitle": "{{page}} - PinBoard"
   },
   "loading": "Chargement…",
   "layout": {
@@ -17,7 +18,10 @@
   },
   "routeError": {
     "title": "Une erreur est survenue",
+    "unexpected": "Une erreur inattendue est survenue. Réessayez ou revenez à l'accueil.",
+    "notFoundTitle": "Page introuvable",
     "notFound": "Cette page n'existe pas.",
+    "newVersionTitle": "Mise à jour disponible",
     "newVersion": "Une nouvelle version est disponible. Rechargez pour continuer."
   },
   "errors": {

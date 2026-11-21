@@ -1,10 +1,10 @@
 ---
 feature: home
 title: Home
-status: planned            # template baseline placeholder - replaced by each project's real landing page
+status: in-progress
 since: -
-task: -
-summary: Signed-in landing page that completes the login -> home -> logout flow on the empty template.
+task: 004
+summary: Signed-in landing page that greets the member by first name until the bookmarks list replaces it.
 routes: / [protected]
 ---
 
@@ -12,18 +12,29 @@ routes: / [protected]
 
 ## Overview
 
-Placeholder landing page behind `ProtectedRoute`, inside `AppLayout`. Each project replaces its content
-(dashboard, main list...) and may rename the feature; update this page and the route table when it does.
+Temporary landing page behind `ProtectedRoute`, inside `AppLayout`: a greeting with the member's first name and
+a short note that the bookmarks list is coming. The bookmarks feature replaces this page in round 2.
 
 ## Screens & states
 
 | Screen (route) | States designed | Notes |
 |---|---|---|
-| Home (`/`) | empty state with guidance | replace with the project's real content |
+| Home (`/`, protected) | greeting + "coming soon" card | fluid h1, card padding grows from `--bp-tablet`; works at 320 px |
+
+## API usage
+
+None. The first name comes from the session: `ProtectedRoute` passes `{ user }` as outlet context (forwarded by
+`AppLayout`), read by `useSessionUser()` - the home feature never imports the auth feature.
 
 ## Code map
 
 | Part | Files |
 |---|---|
+| Hooks | `src/features/home/hooks/useSessionUser.ts` |
 | Page | `src/features/home/pages/HomePage/` |
+| Routing | `src/routes/paths.ts` (`home`), `routeModules.ts`, `router.tsx` (title `home:title`) |
 | i18n | `src/shared/i18n/locales/{en,fr}/home.json` |
+
+## Testing
+
+Covered by the app flow in `src/routes/router.test.tsx` (after login the heading "Hello, <first name>" is shown).

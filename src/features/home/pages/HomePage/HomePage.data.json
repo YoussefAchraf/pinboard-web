@@ -1,4 +1,6 @@
 {
   "titleKey": "title",
-  "emptyStateKey": "emptyState"
+  "greetingKey": "greeting",
+  "comingSoonTitleKey": "comingSoon.title",
+  "comingSoonTextKey": "comingSoon.text"
 }

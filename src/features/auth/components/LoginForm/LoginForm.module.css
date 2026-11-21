@@ -1,19 +1,77 @@
 /*
- * LoginForm.module.css - presentation for LoginForm.tsx (placeholder).
- *
- * Classes to write:
- *   .form        display grid; gap var(--space-4)
- *   .field       display grid; gap var(--space-1)
- *   .label       font-size var(--font-size-200); font-weight var(--font-weight-semibold); color var(--color-text)
- *   .input       min-block-size var(--touch-target-min); padding-inline var(--space-3);
- *                border 1px solid var(--color-border); border-radius var(--radius-md); background var(--color-surface)
- *                states: :hover (border var(--color-text-muted)), :focus-visible (ring from global.css),
- *                [aria-invalid='true'] (border var(--color-danger)), :disabled (opacity, cursor)
- *   .fieldError  font-size var(--font-size-200); color var(--color-danger)
- *   .formError   padding var(--space-3); border-radius var(--radius-md); background var(--color-danger-surface); color var(--color-danger)
- *   .submit      min-block-size var(--touch-target-min); background var(--color-accent); color var(--color-accent-contrast);
- *                border-radius var(--radius-md); transition background var(--duration-fast) var(--easing-standard)
- *                states: :hover var(--color-accent-hover), :disabled / [aria-busy='true'] reduced opacity
- *
- * Tokens only (stylelint enforces). Mobile-first; no breakpoint needed for a single-column form.
+ * LoginForm.module.css - presentation for LoginForm.tsx.
+ * Tokens only (stylelint enforces). Mobile-first; a single-column form needs no breakpoint.
  */
+.form {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.field {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.label {
+  font-size: var(--font-size-200);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.input {
+  inline-size: 100%;
+  min-block-size: var(--touch-target-min);
+  padding-inline: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  transition: border-color var(--duration-fast) var(--easing-standard);
+}
+
+.input:hover {
+  border-color: var(--color-text-muted);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.fieldError {
+  font-size: var(--font-size-200);
+  color: var(--color-danger);
+}
+
+.formError {
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background: var(--color-danger-surface);
+  color: var(--color-danger);
+}
+
+.submit {
+  min-block-size: var(--touch-target-min);
+  padding-inline: var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: background var(--duration-fast) var(--easing-standard);
+}
+
+.submit:disabled,
+.submit[aria-busy='true'] {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.submit:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}

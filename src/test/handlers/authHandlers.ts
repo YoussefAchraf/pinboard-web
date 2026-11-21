@@ -14,6 +14,9 @@
  *     POST /api/v1/auth/logout   204
  *     POST /api/v1/auth/refresh  401 UNAUTHENTICATED
  *   Per-test overrides: server.use(http.get(apiUrl('/auth/whoami'), () => HttpResponse.json({ user: TEST_USER })))
+ *   Ready-made overrides:
+ *     signedInWhoami()                  GET whoami -> 200 { user: TEST_USER } (a signed-in visitor)
+ *     loginFails(status, code, details) POST login -> <status> error envelope
  *   - One handlers file per feature: handlers/<feature>Handlers.ts.
  */
 import { http, HttpResponse } from 'msw';
@@ -59,3 +62,17 @@ export const authHandlers = [
   http.post(apiUrl('/auth/logout'), () => new HttpResponse(null, { status: 204 })),
   http.post(apiUrl('/auth/refresh'), () => HttpResponse.json(errorBody('UNAUTHENTICATED', 'No session'), { status: 401 })),
 ];
+
+/** Override: the visitor already has a session (whoami -> TEST_USER). */
+export function signedInWhoami(): ReturnType<typeof http.get> {
+  return http.get(apiUrl('/auth/whoami'), () => HttpResponse.json({ user: TEST_USER }));
+}
+
+/** Override: POST /auth/login answers with the given contract error. */
+export function loginFails(
+  status: number,
+  code: IApiErrorBody['code'],
+  details?: IApiErrorBody['details'],
+): ReturnType<typeof http.post> {
+  return http.post(apiUrl('/auth/login'), () => HttpResponse.json(errorBody(code, 'Login failed', details), { status }));
+}

@@ -1,4 +1,8 @@
 {
   "title": "Home",
-  "emptyState": "Nothing here yet."
+  "greeting": "Hello, {{name}}",
+  "comingSoon": {
+    "title": "Your bookmarks are coming soon",
+    "text": "The bookmarks list is on its way. You will save, find and open your links from this page."
+  }
 }

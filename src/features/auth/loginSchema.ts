@@ -1,20 +1,15 @@
 /**
  * FILE:   src/features/auth/loginSchema.ts
  * LAYER:  feature (root of the feature folder)
- * STATUS: placeholder - implement in place; keep this header in sync with the real code.
+ * STATUS: implemented
  *
  * PURPOSE
- *   Client-side validation for the login form. Must match the backend schema
- *   (et-be src/interface/validation/authSchemas.ts, i.e. the contract) - the backend still
- *   validates; this is for fast feedback only.
+ *   Client-side validation for the login form, matching contract LoginRequest (auth.yaml 1.1.0:
+ *   email format, max 254; password 8-128). The backend still validates; this is fast feedback only.
  *
- * WHAT TO WRITE
- *   export const loginSchema = z.object({
- *     email: z.string().trim().min(1, { message: 'validation.required' }).email({ message: 'validation.email' }).max(254),
- *     password: z.string().min(8, { message: 'validation.too_small' }).max(128),
- *   });
- *   export type LoginFormValues = z.infer<typeof loginSchema>;
- *   - Messages are i18n KEYS (common namespace), rendered with t(...) by the form.
+ * CONTENT
+ *   Messages are i18n KEYS of the `common` namespace (validation.*), rendered with t(...) by the form.
+ *   An empty email reports validation.required only (the pipe stops before the format check).
  *
  * EXPORTS
  *   loginSchema, LoginFormValues
@@ -25,4 +20,19 @@
  * MAY IMPORT
  *   zod.
  */
-export {};
+import { z } from 'zod';
+
+export const loginSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .min(1, { message: 'validation.required' })
+    .pipe(z.email({ message: 'validation.email' }).max(254, { message: 'validation.too_big' })),
+  password: z
+    .string()
+    .min(1, { message: 'validation.required' })
+    .min(8, { message: 'validation.too_small' })
+    .max(128, { message: 'validation.too_big' }),
+});
+
+export type LoginFormValues = z.infer<typeof loginSchema>;

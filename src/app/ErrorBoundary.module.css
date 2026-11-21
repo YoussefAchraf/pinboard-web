@@ -1,0 +1,45 @@
+/*
+ * ErrorBoundary.module.css - presentation for the FatalError fallback. Tokens only.
+ */
+.page {
+  display: grid;
+  place-items: center;
+  min-block-size: 100dvh;
+  padding: var(--space-4);
+  background: var(--color-bg);
+}
+
+.card {
+  display: grid;
+  gap: var(--space-4);
+  inline-size: 100%;
+  max-inline-size: 32rem;
+  padding: var(--space-6) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.title {
+  font-size: var(--font-size-600);
+}
+
+.message {
+  color: var(--color-text-muted);
+}
+
+.reload {
+  justify-self: start;
+  min-block-size: var(--touch-target-min);
+  padding-inline: var(--space-4);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--color-accent);
+  color: var(--color-accent-contrast);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+}
+
+.reload:hover {
+  background: var(--color-accent-hover);
+}
