@@ -32,6 +32,8 @@ const boundariesFiles = [
   { pattern: 'src/main.tsx', category: 'entry' },
   // The two route files every layer may use (route strings + chunk prefetch).
   { pattern: 'src/routes/{paths,prefetchRoute}.ts', category: 'route-public' },
+  // ADR 0006: colocated test files (any folder) may import the test harness (src/test/**).
+  { pattern: 'src/**/*.test.{ts,tsx}', category: 'test-file' },
 ];
 const TO_ROUTE_PUBLIC = { to: { file: { categories: 'route-public' } } };
 
@@ -250,6 +252,8 @@ export default tseslint.config(
               },
             },
             { from: { element: { type: 'shared' } }, allow: { to: { element: { types: ['shared'] } } } },
+            // ADR 0006: only test files may import the `test` element; production files stay blocked.
+            { from: { file: { categories: 'test-file' } }, allow: { to: { element: { types: ['test'] } } } },
             {
               from: { element: { type: 'test' } },
               allow: { to: { element: { types: ['test', 'app', 'routes', 'layouts', 'feature', 'shared'] } } },
