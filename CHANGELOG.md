@@ -8,3 +8,7 @@ versions follow [Semantic Versioning](https://semver.org/).
   sets `since:` on the released feature pages, and runs `npm run docs:readme`.
 
 ## [Unreleased]
+
+### Added
+
+- Web platform foundation: apiClient (cookies, CSRF echo, single-flight refresh), ApiError and error codes, domain types, query client, i18n, theme, Spinner, MSW test harness (002)

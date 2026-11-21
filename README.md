@@ -50,6 +50,7 @@ contract-following mock API while backend endpoints are still in progress.
 
 | Feature | Status | Since | Summary |
 |---|---|---|---|
+| [Web platform foundation](docs/features/platform.md) | in-progress | - | Shared layer every feature uses - HTTP client with cookie session, CSRF and silent refresh, typed API errors, i18n (en, fr), theme and the MSW test harness. |
 | [Authentication](docs/features/auth.md) | planned | - | Sign in and sign out with cookie sessions, session bootstrap on load, automatic token refresh and guarded routes. |
 | [Home](docs/features/home.md) | planned | - | Signed-in landing page that completes the login -> home -> logout flow on the empty template. |
 

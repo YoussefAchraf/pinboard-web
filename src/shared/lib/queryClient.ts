@@ -1,27 +1,21 @@
 /**
  * FILE:   src/shared/lib/queryClient.ts
  * LAYER:  shared
- * STATUS: placeholder - implement in place; keep this header in sync with the real code.
+ * STATUS: implemented
  *
  * PURPOSE
  *   The single TanStack Query client with app-wide defaults.
  *
- * WHAT TO WRITE
- *   export const queryClient = new QueryClient({
- *     defaultOptions: {
- *       queries: {
- *         staleTime: 30_000,                      // lists; detail queries override (~60s) in their queryOptions
- *         retry: (count, error) => count < 1 && !isApiError(error, 'UNAUTHENTICATED') && !isApiError(error, 'FORBIDDEN'),
- *         refetchOnWindowFocus: true,
- *       },
- *       mutations: { retry: false },              // never auto-retry non-idempotent writes
- *     },
- *   });
+ * CONTENT
+ *   queries:   staleTime 30 s (lists; detail queries override ~60 s in their queryOptions),
+ *              retry once except for UNAUTHENTICATED / FORBIDDEN (shouldRetryQuery),
+ *              refetchOnWindowFocus true.
+ *   mutations: retry false - never auto-retry non-idempotent writes.
  *   - Query KEYS are not defined here: each feature owns them in api/<feature>Queries.ts
  *     (queryOptions factories), so keys and fetchers can never drift apart.
  *
  * EXPORTS
- *   const queryClient
+ *   const queryClient, function shouldRetryQuery
  *
  * USED BY
  *   app/App.tsx (QueryClientProvider, cache clear on session expiry), test/renderWithProviders.tsx
@@ -31,4 +25,20 @@
  * MAY IMPORT
  *   @tanstack/react-query, ./apiError.
  */
-export {};
+import { QueryClient } from '@tanstack/react-query';
+import { isApiError } from './apiError';
+
+export function shouldRetryQuery(failureCount: number, error: unknown): boolean {
+  return failureCount < 1 && !isApiError(error, 'UNAUTHENTICATED') && !isApiError(error, 'FORBIDDEN');
+}
+
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      retry: shouldRetryQuery,
+      refetchOnWindowFocus: true,
+    },
+    mutations: { retry: false },
+  },
+});

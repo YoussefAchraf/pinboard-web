@@ -25,7 +25,8 @@ Rebranding means editing this file only.
 ## Themes
 
 `useTheme` sets `<html data-theme="light|dark">`; the dark block in `tokens.css` redefines the semantic
-color tokens. Components never know which theme is active.
+color tokens. Components never know which theme is active. The preference (`light` | `dark` | `system`,
+default `system` = `prefers-color-scheme`) lives in `shared/store/themeStore.ts` and is not persisted yet.
 
 ## Breakpoints - `src/styles/breakpoints.css`
 
@@ -49,4 +50,4 @@ live in `src/shared/components/` and are created on the second need, not specula
 
 | Component | Purpose | Status |
 |---|---|---|
-| `Spinner` | Loading indicator (route chunks, session bootstrap, buttons) | placeholder |
+| `Spinner` | Loading indicator (route chunks, session bootstrap, buttons); `role="status"`, sizes `sm`/`md`/`lg`, slower rotation under reduced motion | implemented (002) |
